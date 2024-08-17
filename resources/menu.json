@@ -1,0 +1,67 @@
+{
+    "menu": [
+        {
+            "label": "Navigasi",
+            "type": "header"
+        },
+        {
+            "label": "Beranda",
+            "icon": "home",
+            "route": "home"
+        },
+        {
+            "label": "Master",
+            "type": "header",
+            "permissionAny": [
+                "company_view",
+                "departement_view",
+                "role_view",
+                "permission_view",
+                "position_view",
+                "user_view"
+            ]
+        },
+        {
+            "label": "Departemen",
+            "icon": "office-building-cog",
+            "route": "departements",
+            "urlActive": "/master/departements",
+            "permission": "departement_view"
+        },
+        {
+            "label": "Perusahaan",
+            "icon": "office-building-cog",
+            "route": "company",
+            "urlActive": "/master/company",
+            "permission": "company_view"
+        },
+        {
+            "label": "Posisi",
+            "icon": "clipboard-account-outline",
+            "route": "positions",
+            "urlActive": "/master/positions",
+            "permission": "position_view"
+        },
+        {
+            "label": "Roles",
+            "icon": "shield-lock-open-outline",
+            "route": "roles",
+            "urlActive": "/master/roles*",
+            "permission": "role_view"
+        },
+        {
+            "label": "Permissions",
+            "icon": "shield-key-outline",
+            "route": "permissions",
+            "urlActive": "/master/permissions",
+            "permission": "permission_view"
+        },
+        {
+            "label": "Users",
+            "icon": "account-multiple-outline",
+            "route": "users",
+            "urlActive": "/master/users",
+            "permission": "user_view"
+        }
+    ]
+}
