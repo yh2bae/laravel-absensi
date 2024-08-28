@@ -33,6 +33,14 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->roles->first()->name,
+                'phone' => $user->profile->phone ?? null,
+                'address' => $user->profile->address ?? null,
+                'avatar' => $user->profile->avatar ?? null,
+                'department' => $user->userDepartementPosition->departement->name ?? null,
+                'position' => $user->userDepartementPosition->position->name ?? null,
+                'face_embedding' => $user->faceRecognition->face_embedding ?? null,
+                'image_url' => $user->faceRecognition->image_url ?? null,
+ 
             ];
 
             return response()->json([
@@ -89,14 +97,19 @@ class AuthController extends Controller
                 'avatar' => $user->profile->avatar ?? null,
                 'department' => $user->userDepartementPosition->departement->name ?? null,
                 'position' => $user->userDepartementPosition->position->name ?? null,
-                'face_embedding' => $user->faceEmbedding->embedding ?? null,
-                'image_url' => $user->faceEmbedding->image_url ?? null,
+                'face_embedding' => $user->faceRecognition->face_embedding ?? null,
+                'image_url' => $user->faceRecognition->image_url ?? null,
             ];
+
+            $token = request()->bearerToken();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data user berhasil diambil',
-                'data' => $user,
+                'data' => [
+                    'user' => $user,
+                    'token' => $token,
+                ],
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([

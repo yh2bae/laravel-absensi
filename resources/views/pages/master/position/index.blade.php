@@ -22,6 +22,9 @@
                         <tr>
                             <th>No.</th>
                             <th>
+                                Department
+                            </th>
+                            <th>
                                 Position
                             </th>
                             <th class="text-center">Action</th>
@@ -51,6 +54,10 @@
                             searchable: false,
                             orderable: false,
                             width: '5%'
+                        },
+                        {
+                            data: 'department',
+                            name: 'department'
                         },
                         {
                             data: 'name',

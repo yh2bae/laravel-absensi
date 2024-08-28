@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\PositionRequest;
+use App\Models\Departement;
 use App\Models\Position;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -36,12 +37,15 @@ class PositionController extends Controller implements HasMiddleware
             return $this->datatables($dataTables);
         }
 
+        $departements = Departement::all();
+
         $data = [
             'page_title' => 'Posisi',
             'breadcrumbs' => [
                 'home' => ['title' => 'Beranda', 'url' => route('home')],
                 'posisi' => ['title' => 'Posisi', 'url' => route('positions')],
             ],
+            'departements' => $departements,
         ];
 
         return view($this->path . 'index', $data);
@@ -53,6 +57,7 @@ class PositionController extends Controller implements HasMiddleware
             $request->validated();
 
             Position::create([
+                'departement_id' => $request->departement_id,
                 'name' => $request->name,
             ]);
 
@@ -71,7 +76,7 @@ class PositionController extends Controller implements HasMiddleware
     public function show($id)
     {
         try {
-            $position = Position::findOrFail($id);
+            $position = Position::with('departement')->findOrFail($id);
 
             return response()->json([
                 'status' => 'success',
@@ -92,6 +97,7 @@ class PositionController extends Controller implements HasMiddleware
 
             $position = Position::findOrFail($id);
             $position->update([
+                'departement_id' => $request->departement_id,
                 'name' => $request->name,
             ]);
 
@@ -127,7 +133,7 @@ class PositionController extends Controller implements HasMiddleware
 
     protected function datatables(DataTables $dataTables)
     {
-        $query = Position::query();
+        $query = Position::query()->with('departement');
 
         return $dataTables->eloquent($query)
             ->addIndexColumn()
@@ -136,10 +142,29 @@ class PositionController extends Controller implements HasMiddleware
                 $pageStart = request()->input('start', 0);
                 return ++$no + $pageStart . '.';
             })
+            ->addColumn('department', function ($item) {
+                return $item->departement ? $item->departement->name : '-';
+            })
             ->addColumn('action', function ($item) {
                 return view($this->path . 'components.row.action', compact('item'));
             })
             ->rawColumns(['action'])
             ->make(true);
+    }
+
+    public function positionWithDepartement($id)
+    {
+        try {
+            $position = Position::where('departement_id', $id)->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $position,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan',
+            ], 404);
+        }
     }
 }

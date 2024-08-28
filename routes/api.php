@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\Api\AttendanceController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AttendanceController;
+use App\Http\Controllers\Api\FaceRecognitionController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -26,5 +27,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/attendance/checkin', 'checkin');
         Route::post('/attendance/checkout', 'checkout');
         Route::get('/attendance/is-checkin', 'isCheckedin');
+    });
+
+    Route::controller(FaceRecognitionController::class)->group(function () {
+        Route::post('/face-recognition', 'update');
     });
 });

@@ -1,74 +1,98 @@
 [
     {
-        "name": "HR Manager"
+        "name": "HR Manager",
+        "departement_id": "d2f1d4c6-79a3-4f22-a9a6-6c7a9ef69bfb"
     },
     {
-        "name": "Recruitment Specialist"
+        "name": "Recruitment Specialist",
+        "departement_id": "d2f1d4c6-79a3-4f22-a9a6-6c7a9ef69bfb"
     },
     {
-        "name": "HR Assistant"
+        "name": "HR Assistant",
+        "departement_id": "d2f1d4c6-79a3-4f22-a9a6-6c7a9ef69bfb"
     },
     {
-        "name": "Chief Financial Officer"
+        "name": "Chief Financial Officer",
+        "departement_id": "f5e7b3c2-4a6f-4e23-9b7b-7f4c9ab1c97d"
     },
     {
-        "name": "Financial Analyst"
+        "name": "Financial Analyst",
+        "departement_id": "f5e7b3c2-4a6f-4e23-9b7b-7f4c9ab1c97d"
     },
     {
-        "name": "Accountant"
+        "name": "Accountant",
+        "departement_id": "f5e7b3c2-4a6f-4e23-9b7b-7f4c9ab1c97d"
     },
     {
-        "name": "Marketing Manager"
+        "name": "Marketing Manager",
+        "departement_id": "2a13d789-d6a7-4e84-9d5b-2c7e2b8f9ad6"
     },
     {
-        "name": "Content Strategist"
+        "name": "Content Strategist",
+        "departement_id": "2a13d789-d6a7-4e84-9d5b-2c7e2b8f9ad6"
     },
     {
-        "name": "Social Media Specialist"
+        "name": "Social Media Specialist",
+        "departement_id": "2a13d789-d6a7-4e84-9d5b-2c7e2b8f9ad6"
     },
     {
-        "name": "IT Director"
+        "name": "IT Director",
+        "departement_id": "e48b3d6c-7b1f-4d5b-a9c9-1f6e2a8c6f97"
     },
     {
-        "name": "Software Engineer"
+        "name": "Software Engineer",
+        "departement_id": "e48b3d6c-7b1f-4d5b-a9c9-1f6e2a8c6f97"
     },
     {
-        "name": "System Administrator"
+        "name": "System Administrator",
+        "departement_id": "e48b3d6c-7b1f-4d5b-a9c9-1f6e2a8c6f97"
     },
     {
-        "name": "Customer Service Manager"
+        "name": "Customer Service Manager",
+        "departement_id": "7e9b8c5d-9b3a-4e56-a5e4-6f1a3c7d2b9e"
     },
     {
-        "name": "Customer Service Representative"
+        "name": "Customer Service Representative",
+        "departement_id": "7e9b8c5d-9b3a-4e56-a5e4-6f1a3c7d2b9e"
     },
     {
-        "name": "Sales Director"
+        "name": "Sales Director",
+        "departement_id": "b8c3a7f6-8b1c-4d6b-a9f3-2c6e2a8b6f97"
     },
     {
-        "name": "Sales Representative"
+        "name": "Sales Representative",
+        "departement_id": "b8c3a7f6-8b1c-4d6b-a9f3-2c6e2a8b6f97"
     },
     {
-        "name": "R&D Manager"
+        "name": "R&D Manager",
+        "departement_id": "6a2f9c4e-7b1d-4c5b-a9f2-1d7e2c8a5f97"
     },
     {
-        "name": "Research Scientist"
+        "name": "Research Scientist",
+        "departement_id": "6a2f9c4e-7b1d-4c5b-a9f2-1d7e2c8a5f97"
     },
     {
-        "name": "Operations Manager"
+        "name": "Operations Manager",
+        "departement_id": "9d3a7f8b-6b1f-4e5b-a9c6-2f8e2b7d9b4a"
     },
     {
-        "name": "Logistics Coordinator"
+        "name": "Logistics Coordinator",
+        "departement_id": "9d3a7f8b-6b1f-4e5b-a9c6-2f8e2b7d9b4a"
     },
     {
-        "name": "Legal Counsel"
+        "name": "Legal Counsel",
+        "departement_id": "a2f3d4e6-7a9f-4b5b-a9f1-6c7a9ef7c4d9"
     },
     {
-        "name": "Paralegal"
+        "name": "Paralegal",
+        "departement_id": "a2f3d4e6-7a9f-4b5b-a9f1-6c7a9ef7c4d9"
     },
     {
-        "name": "Office Manager"
+        "name": "Office Manager",
+        "departement_id": "3d7a8b9f-6f4c-4d5b-a9e2-7b1a9c7f6d4e"
     },
     {
-        "name": "Administrative Assistant"
+        "name": "Administrative Assistant",
+        "departement_id": "3d7a8b9f-6f4c-4d5b-a9e2-7b1a9c7f6d4e"
     }
 ]

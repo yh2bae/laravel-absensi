@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Master;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PositionRequest extends FormRequest
+class FaceRecognitionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class PositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'departement_id' => ['required'],
-            'name' => ['required'],
+            'face_embedding' => ['required'],
         ];
     }
 
@@ -36,8 +35,7 @@ class PositionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'departement_id.required' => 'Departemen wajib dipilih',
-            'name.required' => 'Nama Posisi wajib diisi',
+            'face_embedding.required' => 'Face embedding harus diisi',
         ];
     }
 }

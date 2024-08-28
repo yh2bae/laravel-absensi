@@ -106,6 +106,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/positions/show/{id}', 'show')->name('positions.show');
             Route::put('/positions/update/{id}', 'update')->name('positions.update');
             Route::delete('/positions/delete/{id}', 'destroy')->name('positions.destroy');
+            Route::get('/positions/departement/{id}', 'positionWithDepartement')->name('positions.departement');
         });
 
         // Company

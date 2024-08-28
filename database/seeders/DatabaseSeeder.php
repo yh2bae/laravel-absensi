@@ -55,6 +55,7 @@ class DatabaseSeeder extends Seeder
         $departements = json_decode(file_get_contents(database_path('seeders/data/departemen.json')), true);
         foreach ($departements as $departement) {
             $userObj = Departement::create([
+                'id' => $departement['id'],
                 'name' => $departement['name'],
             ]);
 
@@ -63,6 +64,7 @@ class DatabaseSeeder extends Seeder
         $positions = json_decode(file_get_contents(database_path('seeders/data/position.json')), true);
         foreach ($positions as $position) {
             $userObj = Position::create([
+                'departement_id' => $position['departement_id'],
                 'name' => $position['name'],
             ]);
 

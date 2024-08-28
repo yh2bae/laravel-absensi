@@ -68,9 +68,6 @@
                 </label>
                 <select class="js-example-basic-single" name="position" id="position">
                     <option></option>
-                    @foreach ($position as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                    @endforeach
                 </select>
                 <div class="invalid-feedback mt-2"></div>
             </div>
@@ -145,6 +142,50 @@
                     placeholder: 'Pilih posisi',
                 });
             });
+
+
+             // Function to fetch positions based on departement
+            function fetchPositions(departement_id) {
+                if (departement_id) {
+                    $.ajax({
+                        url: "{{ route('positions.departement', '') }}" + '/' + departement_id,
+                        type: 'GET',
+                        success: function(response) {
+                            let data = response.data;
+                            $('#offcanvasAdd').find('#position').empty().append('<option></option>');
+                            data.forEach(function(item) {
+                                $('#offcanvasAdd').find('#position').append(
+                                    '<option value="' + item.id + '">' + item.name + '</option>'
+                                );
+                            });
+                            $('#offcanvasAdd').find('#position').attr('disabled', false);
+                        },
+                        error: function(xhr) {
+                            let error = xhr.responseJSON;
+                            Swal.fire({
+                                title: 'Error!',
+                                text: error.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                } else {
+                    $('#offcanvasAdd').find('#position').attr('disabled', true);
+                }
+            }
+
+            var departement = $('#offcanvasAdd').find('#departement').val();
+
+            // Fetch positions on page load if departement is selected
+            fetchPositions(departement);
+
+            // Fetch positions when departement changes
+            $('#offcanvasAdd').find('#departement').on('change', function() {
+                var departement_id = $(this).val();
+                fetchPositions(departement_id);
+            });
+           
 
             $('#submitAdd').on('click', function(event) {
                 event.preventDefault();
@@ -233,6 +274,7 @@
                     }
                 });
             });
+
         });
     </script>
 @endpush

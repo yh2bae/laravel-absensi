@@ -12,6 +12,11 @@ class Departement extends Model
 
     protected $guarded = [];
 
+    public function positions()
+    {
+        return $this->hasMany(Position::class);
+    }
+    
     public function userDepartementPosition()
     {
         return $this->hasMany(UserDepartementPosition::class);

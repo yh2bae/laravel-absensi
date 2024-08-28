@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('positions', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('departement_id')->index();
             $table->string('name');
             $table->timestamps();
         });

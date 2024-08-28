@@ -70,9 +70,7 @@
                 </label>
                 <select class="js-example-basic-single" name="position" id="position">
                     <option></option>
-                    @foreach ($position as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                    @endforeach
+                     
                 </select>
             </div>
         </form>
@@ -116,6 +114,42 @@
                 });
             });
 
+            $('#offcanvasEdit').find('#departement').on('change', function() {
+                var departement = $(this).val();
+                if (departement == '') {
+                    $('#offcanvasEdit').find('#position').attr('disabled', true).empty().append('<option></option>');
+                } else {
+                    $('#offcanvasEdit').find('#position').attr('disabled', false);
+                    $.ajax({
+                        url: "{{ route('positions.departement', '') }}" + '/' + departement,
+                        type: 'GET',
+                        success: function(response) {
+                            let data = response.data;
+                            $('#offcanvasEdit').find('#position').empty().append('<option></option>');
+                            data.forEach(function(item) {
+                                $('#offcanvasEdit').find('#position').append(
+                                    '<option value="' + item.id + '">' + item.name + '</option>'
+                                );
+                            });
+
+                            var position = $('#offcanvasEdit').find('#position').data('selected');
+                            if (position) {
+                                $('#offcanvasEdit').find('#position').val(position).trigger('change');
+                            }
+                        },
+                        error: function(xhr) {
+                            let error = xhr.responseJSON;
+                            Swal.fire({
+                                title: 'Error!',
+                                text: error.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
             $('#loadingIndicator').show();
             $('#formEdit').hide();
             $('#submitUpdate').attr('disabled', true);
@@ -129,15 +163,20 @@
                     let data = response.data;
 
                     $('#offcanvasEdit').find('#id').val(data.id);
-                    $('#offcanvasEdit').find('#name').val(data.name);
-                    $('#offcanvasEdit').find('#email').val(data.email);
-                    $('#offcanvasEdit').find('#role').val(data.role).trigger('change');
-                    $('#offcanvasEdit').find('#departement').val(data.departement.id).trigger('change');
-                    $('#offcanvasEdit').find('#position').val(data.position.id).trigger('change');
+                    $('#offcanvasEdit').find('#name').val(data.name ?? ''); 
+                    $('#offcanvasEdit').find('#email').val(data.email ?? ''); 
+                    $('#offcanvasEdit').find('#role').val(data.role ?? '').trigger('change'); 
+                    $('#offcanvasEdit').find('#departement').val(data.departement?.id ?? '').trigger('change');
+
+                    $('#offcanvasEdit').find('#position').data('selected', data.position?.id ?? '');
 
                     $('#loadingIndicator').hide();
                     $('#formEdit').show();
                     $('#submitUpdate').attr('disabled', false);
+
+                    if (data.departement?.id) {
+                        $('#offcanvasEdit').find('#departement').trigger('change');
+                    }
                 },
                 error: function(xhr) {
                     let error = xhr.responseJSON;
@@ -150,91 +189,91 @@
                 }
             });
 
-            $(document).ready(function() {
-                $('#submitUpdate').on('click', function() {
-                    var formData = {
-                        id: $('#offcanvasEdit').find('#id').val(),
-                        name: $('#offcanvasEdit').find('#name').val(),
-                        role: $('#offcanvasEdit').find('#role').val(),
-                        departement: $('#offcanvasEdit').find('#departement').val(),
-                        position: $('#offcanvasEdit').find('#position').val(),
-                        _token: $('input[name="_token"]').val()
-                    };
+        });
+        $(document).ready(function() {
+            $('#submitUpdate').on('click', function() {
+                var formData = {
+                    id: $('#offcanvasEdit').find('#id').val(),
+                    name: $('#offcanvasEdit').find('#name').val(),
+                    role: $('#offcanvasEdit').find('#role').val(),
+                    departement: $('#offcanvasEdit').find('#departement').val(),
+                    position: $('#offcanvasEdit').find('#position').val(),
+                    _token: $('input[name="_token"]').val()
+                };
 
-                    var resetForm = () => {
-                        $('#offcanvasEdit').find('#name').val('').removeClass('is-invalid')
-                            .siblings('.invalid-feedback').html('');
-                        $('#offcanvasEdit').find('#role').val('').removeClass('is-invalid')
-                            .siblings('.invalid-feedback').html('');
-                        $('#offcanvasEdit').find('#departement').val('').removeClass(
-                                'is-invalid')
-                            .siblings('.invalid-feedback').html('');
-                        $('#offcanvasEdit').find('#position').val('').removeClass('is-invalid')
-                            .siblings('.invalid-feedback').html('');
-                    };
+                console.log(formData);
 
-                    $.ajax({
-                        url: "{{ route('users.update', '') }}" + '/' + formData.id,
-                        type: 'PUT',
-                        data: formData,
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Berhasil!',
-                                text: response.message,
-                                icon: 'success',
-                                confirmButtonClass: 'btn btn-primary w-xs me-2 mt-2',
-                                buttonsStyling: false,
-                                showCloseButton: true
-                            });
+                var resetForm = () => {
+                    $('#offcanvasEdit').find('#name').val('').removeClass('is-invalid')
+                        .siblings('.invalid-feedback').html('');
+                    $('#offcanvasEdit').find('#role').val('').removeClass('is-invalid')
+                        .siblings('.invalid-feedback').html('');
+                    $('#offcanvasEdit').find('#departement').val('').removeClass(
+                            'is-invalid')
+                        .siblings('.invalid-feedback').html('');
+                    $('#offcanvasEdit').find('#position').val('').removeClass('is-invalid')
+                        .siblings('.invalid-feedback').html('');
+                };
 
-                            resetForm();
-                            $('#offcanvasEdit').offcanvas('hide');
-                            $('#datatables').DataTable().ajax.reload();
-                        },
-                        error: function(response) {
-                            let error = response.responseJSON;
+                $.ajax({
+                    url: "{{ route('users.update', '') }}" + '/' + formData.id,
+                    type: 'PUT',
+                    data: formData,
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonClass: 'btn btn-primary w-xs me-2 mt-2',
+                            buttonsStyling: false,
+                            showCloseButton: true
+                        });
 
-                            if (error.errors) {
-                                if (error.errors.name) {
-                                    $('#offcanvasEdit').find('#name').addClass(
-                                            'is-invalid')
-                                        .siblings('.invalid-feedback').html(error.errors
-                                            .name);
-                                }
+                        resetForm();
+                        $('#offcanvasEdit').offcanvas('hide');
+                        $('#datatables').DataTable().ajax.reload();
+                    },
+                    error: function(response) {
+                        let error = response.responseJSON;
 
-                                if (error.errors.role) {
-                                    $('#offcanvasEdit').find('#role').addClass(
-                                            'is-invalid')
-                                        .siblings('.invalid-feedback').html(error.errors
-                                            .role);
-                                }
-
-                                if (error.errors.departement) {
-                                    $('#offcanvasEdit').find('#departement').addClass(
-                                            'is-invalid')
-                                        .siblings('.invalid-feedback').html(error.errors
-                                            .departement);
-                                }
-
-                                if (error.errors.position) {
-                                    $('#offcanvasEdit').find('#position').addClass(
-                                            'is-invalid')
-                                        .siblings('.invalid-feedback').html(error.errors
-                                            .position);
-                                }
-                            } else {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: error.message,
-                                    icon: 'error',
-                                    confirmButtonText: 'OK'
-                                });
+                        if (error.errors) {
+                            if (error.errors.name) {
+                                $('#offcanvasEdit').find('#name').addClass(
+                                        'is-invalid')
+                                    .siblings('.invalid-feedback').html(error.errors
+                                        .name);
                             }
+
+                            if (error.errors.role) {
+                                $('#offcanvasEdit').find('#role').addClass(
+                                        'is-invalid')
+                                    .siblings('.invalid-feedback').html(error.errors
+                                        .role);
+                            }
+
+                            if (error.errors.departement) {
+                                $('#offcanvasEdit').find('#departement').addClass(
+                                        'is-invalid')
+                                    .siblings('.invalid-feedback').html(error.errors
+                                        .departement);
+                            }
+
+                            if (error.errors.position) {
+                                $('#offcanvasEdit').find('#position').addClass(
+                                        'is-invalid')
+                                    .siblings('.invalid-feedback').html(error.errors
+                                        .position);
+                            }
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: error.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
                         }
-                    });
-
-
-                })
+                    }
+                });
             })
         });
     </script>

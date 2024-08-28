@@ -141,10 +141,18 @@ class UserController extends Controller implements HasMiddleware
 
             $user->syncRoles([$request->role]);
 
-            $user->userDepartementPosition->update([
-                'departement_id' => $request->departement,
-                'position_id' => $request->position,
-            ]);
+            if ($user->userDepartementPosition) {
+                $user->userDepartementPosition->update([
+                    'departement_id' => $request->departement,
+                    'position_id' => $request->position,
+                ]);
+            } else {
+                $user->userDepartementPosition()->create([
+                    'user_id' => $user->id,
+                    'departement_id' => $request->departement,
+                    'position_id' => $request->position,
+                ]);
+            }
 
             DB::commit();
 
