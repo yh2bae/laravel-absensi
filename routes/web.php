@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WorkPermitController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\RolesController;
 use App\Http\Controllers\Master\CompanyController;
@@ -114,6 +115,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/company', 'index')->name('company');
             Route::put('/company/update/{id}', 'update')->name('company.update');
         });
+
+    });
+    
+    // Work Permit
+    Route::controller(WorkPermitController::class)->group(function () {
+        Route::get('/work-permit', 'index')->name('work-permit');
+        Route::get('/work-permit/show/{id}', 'show')->name('work-permit.show');
+        Route::put('/work-permit/update/{id}', 'update')->name('work-permit.update');
     });
 
 });

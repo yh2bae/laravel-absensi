@@ -39,7 +39,6 @@ class AuthController extends Controller
                 'department' => $user->userDepartementPosition->departement->name ?? null,
                 'position' => $user->userDepartementPosition->position->name ?? null,
                 'face_embedding' => $user->faceRecognition->face_embedding ?? null,
-                'image_url' => $user->faceRecognition->image_url ?? null,
  
             ];
 
@@ -98,7 +97,6 @@ class AuthController extends Controller
                 'department' => $user->userDepartementPosition->departement->name ?? null,
                 'position' => $user->userDepartementPosition->position->name ?? null,
                 'face_embedding' => $user->faceRecognition->face_embedding ?? null,
-                'image_url' => $user->faceRecognition->image_url ?? null,
             ];
 
             $token = request()->bearerToken();

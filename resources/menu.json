@@ -10,6 +10,11 @@
             "route": "home"
         },
         {
+            "label": "Work Permit",
+            "icon": "comment-account",
+            "route": "work-permit"
+        },
+        {
             "label": "Master",
             "type": "header",
             "permissionAny": [

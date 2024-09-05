@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('face_recognitions', function (Blueprint $table) {
+        Schema::create('work_permits', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->index();
-            $table->text('face_embedding')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->text('reason');
+            $table->string('file')->nullable();
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('face_recognitions');
+        Schema::dropIfExists('work_permits');
     }
 };

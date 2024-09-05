@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\AttendanceController;
+use App\Http\Controllers\Api\WorkPermitController;
 use App\Http\Controllers\Api\FaceRecognitionController;
 
 // Route::get('/user', function (Request $request) {
@@ -31,5 +32,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::controller(FaceRecognitionController::class)->group(function () {
         Route::post('/face-recognition', 'update');
+    });
+
+    Route::controller(WorkPermitController::class)->group(function () {
+        Route::post('/work-permit', 'store');
     });
 });
