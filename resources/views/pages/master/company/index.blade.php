@@ -126,7 +126,7 @@
                                 </div>
                             </div>
 
-                          
+
 
                             {{-- map --}}
                             <div class="col-lg-12">
@@ -150,97 +150,129 @@
 @endsection
 
 @push('scripts')
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch/dist/geosearch.css" />
-<script type='text/javascript' src='{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}'></script>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-geosearch/dist/geosearch.umd.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch/dist/geosearch.css" />
+    <script type='text/javascript' src='{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}'></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-geosearch/dist/geosearch.umd.js"></script>
 
-<script>
-    var map = L.map('map').setView([{{ $company->latitude ?? -6.1753924 }}, {{ $company->longitude ?? 106.8271528 }}], 13);
+    <script>
+        var map = L.map('map').setView([{{ $company->latitude ?? -6.1753924 }}, {{ $company->longitude ?? 106.8271528 }}],
+            13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-    }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
 
-    var marker = L.marker([{{ $company->latitude ?? -6.1753924 }}, {{ $company->longitude ?? 106.8271528 }}], {
-        draggable: true
-    }).addTo(map).bindPopup('Lokasi Perusahaan').openPopup();
+        var marker = L.marker([{{ $company->latitude ?? -6.1753924 }}, {{ $company->longitude ?? 106.8271528 }}], {
+            draggable: true
+        }).addTo(map).bindPopup('Lokasi Perusahaan').openPopup();
 
-    function updateMarker(lat, lng, name) {
-        marker.setLatLng([lat, lng]).update();
-        marker.bindPopup(name).openPopup();
-    }
+        // Inisialisasi circle dengan radius default
+        var circle = L.circle([{{ $company->latitude ?? -6.1753924 }}, {{ $company->longitude ?? 106.8271528 }}], {
+            color: 'blue',
+            fillColor: '#30f',
+            fillOpacity: 0.2,
+            radius: {{ ($company->radius_km ?? 1) * 1000 }} // Radius dalam meter
+        }).addTo(map);
 
-    function updateLocation(lat, lng) {
-        $('#latitude').val(lat);
-        $('#longitude').val(lng);
+        // Fungsi untuk memperbarui marker
+        function updateMarker(lat, lng, name) {
+            marker.setLatLng([lat, lng]).update();
+            marker.bindPopup(name).openPopup();
+        }
 
-        reverseGeocode(lat, lng, function(locationName) {
-            updateMarker(lat, lng, locationName);
-            $('#address').val(locationName); // Update address input
-        });
-    }
+        // Fungsi untuk memperbarui lokasi marker dan radius lingkaran
+        function updateLocation(lat, lng) {
+            $('#latitude').val(lat);
+            $('#longitude').val(lng);
 
-    marker.on('dragend', function(event) {
-        var position = marker.getLatLng();
-        updateLocation(position.lat, position.lng);
-    });
+            var radiusKm = $('#radius_km').val();
+            updateCircle(lat, lng, radiusKm);
 
-    map.on('click', function(e) {
-        var lat = e.latlng.lat;
-        var lng = e.latlng.lng;
-        updateLocation(lat, lng);
-    });
-
-    $('#latitude').on('input', function() {
-        var lat = $(this).val();
-        var lng = $('#longitude').val();
-        updateLocation(lat, lng);
-    });
-
-    $('#longitude').on('input', function() {
-        var lat = $('#latitude').val();
-        var lng = $(this).val();
-        updateLocation(lat, lng);
-    });
-
-    function reverseGeocode(lat, lng, callback) {
-        var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
-        
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.display_name) {
-                    callback(data.display_name);
-                } else {
-                    callback("Nama daerah tidak ditemukan");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                callback("Gagal mendapatkan nama daerah");
+            reverseGeocode(lat, lng, function(locationName) {
+                updateMarker(lat, lng, locationName);
+                $('#address').val(locationName); // Update address input
             });
-    }
+        }
 
-    // Add GeoSearch control
-    const provider = new window.GeoSearch.OpenStreetMapProvider();
+        // Fungsi untuk memperbarui radius lingkaran berdasarkan input radius
+        function updateCircle(lat, lng, radiusKm) {
+            circle.setLatLng([lat, lng]); // Update posisi lingkaran
+            circle.setRadius(radiusKm * 1000); // Update radius dalam meter
+        }
 
-    const searchControl = new window.GeoSearch.GeoSearchControl({
-        notFoundMessage: 'Lokasi tidak ditemukan',
-        provider: provider,
-        style: 'bar',
-        updateMap: true,
-        searchLabel: 'Cari lokasi...',
-    });
+        // Update lokasi lingkaran dan marker ketika marker dipindahkan
+        marker.on('dragend', function(event) {
+            var position = marker.getLatLng();
+            updateLocation(position.lat, position.lng);
+        });
 
-    map.addControl(searchControl);
+        // Update lokasi lingkaran dan marker ketika peta diklik
+        map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+            updateLocation(lat, lng);
+        });
 
-    map.on('geosearch/showlocation', function(result) {
-        var lat = result.location.y;
-        var lng = result.location.x;
-        updateLocation(lat, lng);
-    });
-</script>
+        // Update lokasi lingkaran dan marker ketika input latitude berubah
+        $('#latitude').on('input', function() {
+            var lat = $(this).val();
+            var lng = $('#longitude').val();
+            updateLocation(lat, lng);
+        });
+
+        // Update lokasi lingkaran dan marker ketika input longitude berubah
+        $('#longitude').on('input', function() {
+            var lat = $('#latitude').val();
+            var lng = $(this).val();
+            updateLocation(lat, lng);
+        });
+
+        // Update radius lingkaran ketika input radius berubah
+        $('#radius_km').on('input', function() {
+            var radiusKm = $(this).val();
+            var lat = $('#latitude').val();
+            var lng = $('#longitude').val();
+            updateCircle(lat, lng, radiusKm);
+        });
+
+        // Fungsi untuk mendapatkan nama lokasi berdasarkan lat lng (reverse geocoding)
+        function reverseGeocode(lat, lng, callback) {
+            var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.display_name) {
+                        callback(data.display_name);
+                    } else {
+                        callback("Nama daerah tidak ditemukan");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    callback("Gagal mendapatkan nama daerah");
+                });
+        }
+
+        // Add GeoSearch control
+        const provider = new window.GeoSearch.OpenStreetMapProvider();
+
+        const searchControl = new window.GeoSearch.GeoSearchControl({
+            notFoundMessage: 'Lokasi tidak ditemukan',
+            provider: provider,
+            style: 'bar',
+            updateMap: true,
+            searchLabel: 'Cari lokasi...',
+        });
+
+        map.addControl(searchControl);
+
+        map.on('geosearch/showlocation', function(result) {
+            var lat = result.location.y;
+            var lng = result.location.x;
+            updateLocation(lat, lng);
+        });
+    </script>
 @endpush
-

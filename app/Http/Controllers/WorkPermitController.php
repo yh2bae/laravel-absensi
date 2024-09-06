@@ -22,14 +22,67 @@ class WorkPermitController extends Controller
         }
 
         $data = [
-            'page_title' => 'Work Permit',
+            'page_title' => 'Izin Kerja',
             'breadcrumbs' => [
                 'home' => ['title' => 'Beranda', 'url' => route('home')],
-                'work-permit' => ['title' => 'Work Permit', 'url' => route('work-permit')],
+                'work-permit' => ['title' => 'Izin Kerja', 'url' => route('work-permit')],
             ],
+            'statuses' => WorkPermit::getStatuses(),
         ];
 
         return view($this->path . 'index', $data);
+    }
+
+    public function show($id)
+    {
+        try {
+            $workPermit = WorkPermit::findOrFail($id);
+            $data = [
+                'id' => $workPermit->id,
+                'name' => $workPermit->user->name,
+                'email' => $workPermit->user->email,
+                'avatar' => $workPermit->user->profile->avatar ?? asset('assets/images/users/user-dummy-img.jpg'),
+                'start_date' => date('d M Y', strtotime($workPermit->start_date)),
+                'end_date' => date('d M Y', strtotime($workPermit->end_date)),
+                'days' => date_diff(date_create($workPermit->start_date), date_create($workPermit->end_date))->format('%a'),
+                'phone' => $workPermit->user->profile->phone ?? '-',
+                'address' => $workPermit->user->profile->address ?? '-',
+                'department' => $workPermit->user->userDepartementPosition->departement->name ?? '-',
+                'position' => $workPermit->user->userDepartementPosition->position->name ?? '-',
+                'status' => $workPermit->status,
+                'reason' => $workPermit->reason,
+                'file' => $workPermit->file,
+                'created_at' => date('d M Y H:i:s', strtotime($workPermit->created_at)),
+            ];
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data ditemukan',
+                'data' => $data,
+            ], 200);
+            return view($this->path . 'show', $data);
+        } catch (\Exception $e) {
+            return redirect()->route('work-permit')->with('error', 'Data tidak ditemukan');
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $workPermit = WorkPermit::findOrFail($id);
+            $workPermit->status = $request->status;
+            $workPermit->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil diupdate',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan',
+            ], 404);
+        }
     }
 
     protected function datatables(DataTables $dataTables)

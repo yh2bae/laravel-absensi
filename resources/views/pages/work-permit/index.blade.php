@@ -28,6 +28,8 @@
             </div>
         </div>
     </div>
+    @include('pages.work-permit.components.row.detail')
+    @include('pages.work-permit.components.row.edit')
 @endsection
 
 @push('scripts')
@@ -87,7 +89,7 @@
                 alert(error.message);
             }
 
-           
+
 
         });
     </script>

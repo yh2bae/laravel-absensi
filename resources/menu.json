@@ -10,7 +10,7 @@
             "route": "home"
         },
         {
-            "label": "Work Permit",
+            "label": "Izin Kerja",
             "icon": "comment-account",
             "route": "work-permit"
         },

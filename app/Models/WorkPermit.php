@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class WorkPermit extends Model
 {
@@ -28,6 +28,11 @@ class WorkPermit extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getFileAttribute($value)
+    {
+        return $value ? asset('storage/work-permit/' . $value) : null;
     }
 
 }
