@@ -172,7 +172,7 @@
         var circle = L.circle([{{ $company->latitude ?? -6.1753924 }}, {{ $company->longitude ?? 106.8271528 }}], {
             color: 'blue',
             fillColor: '#30f',
-            fillOpacity: 0.2,
+            fillOpacity: 0.1,
             radius: {{ ($company->radius_km ?? 1) * 1000 }} // Radius dalam meter
         }).addTo(map);
 

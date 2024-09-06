@@ -31,10 +31,22 @@
                 </label>
                 <select class="js-example-basic-single" name="status" id="status">
                     <option></option>
-                    @foreach ($statuses as $status)
-                        <option value="{{ $status }}"
-                            {{ old('status', $workPermit->status ?? '') == $status ? 'selected' : '' }}>
-                            {{ ucfirst($status) }}
+                    @php
+                        // Definisikan array status di luar foreach
+                        $statusMap = [
+                            'approved' => 'disetujui',
+                            'pending' => 'diproses',
+                            'rejected' => 'ditolak',
+                        ];
+                    @endphp
+                    @foreach ($statuses as $statusKey)
+                        @php
+                            // Ambil nilai status dari array statusMap
+                            $statusValue = $statusMap[$statusKey] ?? $statusKey;
+                        @endphp
+                        <option value="{{ $statusKey }}"
+                            {{ old('status', $workPermit->status ?? '') == $statusKey ? 'selected' : '' }}>
+                            {{ ucfirst($statusValue) }}
                         </option>
                     @endforeach
                 </select>
@@ -66,7 +78,7 @@
 
             $('#offcanvasEdit').find('#status').select2({
                 dropdownParent: $('#offcanvasEdit'),
-                placeholder: 'Pilih Departement',
+                placeholder: 'Pilih Status',
             });
 
             $('#loadingIndicator').show();
